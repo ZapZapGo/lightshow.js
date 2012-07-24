@@ -10,7 +10,7 @@ LightShow is a JavaScript/JQuery plugin that helps you create amazingly simple o
 * Auto adjusts itself on window resize. Possible to manually adjust element (e.g. during animation, see: readapt).
 * Position. Automatically center align or align according to directives (e.g. top left) or specified element.
 * Callbacks. Hook in when events occur.
-* Close window on escape key.
+* Close overlay using escape key.
 
 ## Usage
 
