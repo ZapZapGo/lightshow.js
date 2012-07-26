@@ -185,9 +185,9 @@ Releases/removes all memory/elements associated with this instance. This can be 
 		showOnStartup: true
 	});
 	
-### Overlay with close button
+### Overlay with hide button
 	$.lightShow({
-		content: "<div>I CAN HAZ OVERLAY DAT EZ CLOSABLE</div><a href='#' class='close-button'>close overlay</a>",
+		content: "<div>I CAN HAZ OVERLAY DAT EZ CLOSABLE</div><a href='#' class='hide-button'>close overlay</a>",
 		showOnStartup: true
 	});
 	
