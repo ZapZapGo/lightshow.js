@@ -32,18 +32,6 @@ LightShow is a JavaScript/JQuery plugin that helps you create amazingly simple o
 
 	$.lightShow("lightshow-id").show().setContent("<h1>YUP WE'RE SETTING IT!!!!!</h1>").hide();
 
-<!--
-## Methods
-
-### show
-	
-### hide
-	
-### setContent
-	
-### readapt
--->
-
 ## Options
 
 ### Id
@@ -100,50 +88,94 @@ Enabling this option means that pressing the escape key (ESC) automatically clos
 
 ### Effect
 
-Effects that run when overlay is showing/hiding.
+Effects that run when the overlay is showing/hiding.
 
 	effect: {
 		default: {
 			type: 'fade', // Default is 'fade', but can also be, 'slide' and 'toggle'
-			duration: 500 // Time in milliseconds that the effect should animate
+			duration: 500 // Time in milliseconds (ms) that the effect should animate
+		}
+	}
+	
+But it is also possible to override the default effects and use your own, i.e.
+
+	effect: {
+		show: function(element, complete_callback){
+			element.css('display', 'block').zoomIn(500, complete_callback);
+		},
+		hide: function(element, complete_callback){
+			element.zoomOut(500, complete_callback);
 		}
 	}
 
-<!--
-## Other options..
 
-	{
-		id, // default NULL
-		parent: null, // default: 'top'
-		overlay: "window", // default: "window".. But can be any element
-		content: null, // Required: element or text (HTML)
-		opacity: 0.85, // Default 0.75
-		showOnStartup: false, // Default false
-		closeButtonSelector: ".close-button", // Default ".close-button"
-		closeOnEscape: true, // Default: true
-		styling: {
-			backgroundColor: "#000" // Overlay background color. Default "#000" (black)
-		},
-		callbacks: {
-			initialization: {
-				before: function(){},
-				after: function(){}
-			},
-			show: {
-				before: function(){},
-				after: function(){}
-			},
-			hide: {
-				before: function(){},
-				after: function(){}
-			}
-		},
-		effects: {
-			show: function(element, finished){element.fadeIn(finished);},
-			hide: function(element, finished){element.fadeOut(finished);}
-		}
+### Style
+
+#### Overflow
+
+Decides how content overflow is handled.
+
+	style: {
+		overflow: 'hidden', // Default is 'hidden'
 	}
--->
+
+#### Opacity
+
+Specifies the overlay opacity. From 0.0 (fully transparent) to 1.0 (fully opaque).
+
+	style: {
+		opacity: 0.85, // Default is 0.85
+	}
+
+#### Background color
+
+Overlay background color. Note that this color is affected by the overlay opacity.
+
+	style: {
+		backgroundColor: "#000" // Default is '#000' (black)
+	}
+	
+## Methods
+
+### show
+
+Shows the overlay and it's content (runs the 'show' animation).
+
+	$.lightShow({/*options...*/}).show();
+	
+### hide
+
+Hides the overlay and it's content (runs the 'hide' animation).
+
+	$.lightShow({/*options...*/}).hide();
+	
+### setContent
+
+Sets the content of the overlay. Value is same as the 'content' option, i.e.
+
+	$.lightShow({/*options...*/}).setContent("<h1>My amazing content that I want in my overlay!</h1>");
+===========================
+	$.lightShow({/*options...*/}).setContent($("#element-to-use-as-content"));
+	
+### readapt
+
+Repositions/dimensions the overlay and it's content. This can be used when you want to do animations on the content and want the overlay to stick with it.
+
+	$("#element-in-overlay-content").animate({
+		height: '50%'
+	},{
+		step: function(now, fx) {
+			$.lightShow("my-overlay-id").readapt();
+		}
+	});
+	
+### release
+
+Releases/removes all memory/elements associated with this instance. This can be used to clean up overlays.
+
+	var overlay = $.lightShow({/*options...*/}); // Instantiate..
+	overlay.release(); // Tell the instance to release all that it has allocated (variables, elements, etc..)
+	overlay = null; // Necessary to fully release the object from memory
 
 ## Examples
 
