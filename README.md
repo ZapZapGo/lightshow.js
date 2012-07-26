@@ -9,7 +9,12 @@ LightShow is a JavaScript/JQuery plugin that helps you create amazingly simple o
 * No external CSS file needed. But still easy to style.
 * Auto adjusts itself on window resize. Possible to manually adjust element (e.g. during animation, see: readapt).
 * Callbacks. Hook in when events occur.
+* Effects. Use standard JQuery effects (toggle, fade, slide) or use your own.
 * Close overlay using escape key.
+
+### Planned
+
+* Positioning. Position the content relative to the overlay according to directions (e.g. top center, middle center, bottom left, a.s.o.).
 
 ## Usage
 
@@ -43,9 +48,66 @@ LightShow is a JavaScript/JQuery plugin that helps you create amazingly simple o
 
 ### Id
 
-String identity of this instance. E.g. if identity is 'login' then the instance is accessible by using:
+String identity of this instance.
 
+	id: "login"
+
+ This means that if identity is 'login' then the instance is accessible by using:
+ 
 	$.lightShow('login').show();
+	
+### Overlay
+
+Default is 'window', but can also be any element, i.e.
+
+	overlay: 'window' // default
+===================
+	overlay: $("#element-to-overlay")
+	
+### Content
+
+Content that you want to place inside your overlay. This can be either a string (HTML) or an element, i.e.
+
+	content: "<h1>My amazing content that I want in my overlay!</h1>"
+===========================
+	content: $("#element-to-use-as-content")
+
+### Show on startup
+
+Whether or not to run show() directly after initialization.
+
+	showOnStartup: true // Default is false
+
+Enabling this option is equal to doing the following:
+
+	$.lightShow({/*options...*/}).show();
+
+### Hide button selector
+
+Selector used to identify buttons that close (hide) the overlay.
+
+	hideButtonSelector: ".hide-button" // Default is '.hide-button'
+====
+This means that using the above selector you can have content with elements that match the specified selector, i.e.
+
+	content: "<h1>Content!</h1><a href='#' class='hide-button'>Close overlay</a>"
+
+### Hide on escape
+
+Enabling this option means that pressing the escape key (ESC) automatically closes (hides) the overlay.
+
+	hideOnEscape: true // Default is true
+
+### Effect
+
+Effects that run when overlay is showing/hiding.
+
+	effect: {
+		default: {
+			type: 'fade', // Default is 'fade', but can also be, 'slide' and 'toggle'
+			duration: 500 // Time in milliseconds that the effect should animate
+		}
+	}
 
 <!--
 ## Other options..
