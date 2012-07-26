@@ -5,7 +5,7 @@ LightShow is a JavaScript/JQuery plugin that helps you create amazingly simple o
 
 ## Features
 
-* Overlay the whole window or a specific element.
+* Overlay the whole document or a specific element.
 * No external CSS file needed. But still easy to style.
 * Auto adjusts itself on window resize. Possible to manually adjust element (e.g. during animation, see: readapt).
 * Callbacks. Hook in when events occur.
@@ -46,9 +46,9 @@ String identity of this instance.
 	
 ### Overlay
 
-Default is 'window', but can also be any element, i.e.
+The object that you want to overlay. Can be either document (default) or a specific element.
 
-	overlay: 'window' // default
+	overlay: 'document' // Default is 'document'
 ===================
 	overlay: $("#element-to-overlay")
 	
@@ -179,7 +179,7 @@ Releases/removes all memory/elements associated with this instance. This can be 
 
 ## Examples
 
-### Full window overlay with static content
+### Full document overlay with static content
 	$.lightShow({
 		content: "<div>I CAN HAZ OVERLAY</div>",
 		showOnStartup: true
