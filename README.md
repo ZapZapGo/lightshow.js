@@ -1,4 +1,4 @@
-#LightShow (JavaScript/JQuery Overlay)
+![Lightshow](http://zapzapgo.com/assets/images/lightshow/logo.png)
 ============
 
 LightShow is a JavaScript/JQuery plugin that helps you create amazingly simple overlays. Designed to be flexible and easy to use.
