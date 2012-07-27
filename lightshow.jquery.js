@@ -404,8 +404,8 @@ ZapZapGo.LightShow.prototype.setEffect = function(type, duration){
 			hide = function(element, callback){element.slideUp(duration, callback);};
 			break;
 		case "toggle":
-			show = function(element, callback){element.show(callback);};
-			hide = function(element, callback){element.hide(callback);};
+			show = function(element, callback){element.show(duration, callback);};
+			hide = function(element, callback){element.hide(duration, callback);};
 			break;
 		default:
 			ZapZapGo.log("Invalid effect type '" + type + "'. Effect does not exist.");
