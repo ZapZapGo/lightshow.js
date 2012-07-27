@@ -1,6 +1,6 @@
 /*LightShow v0.7
 http://www.github.com/zapzapgo/lightshow.js/
-http://raw.github.com/ZapZapGo/lightshow.js/master/license.txt*/
+https://raw.github.com/ZapZapGo/lightshow.js/master/license.txt*/
 var ZapZapGo = window.ZapZapGo || {};
 
 ZapZapGo.log = ZapZapGo.log || function(message){}
