@@ -1,7 +1,0 @@
-/*,
-					show: function(element, complete_callback){
-						element.css('display', 'block').zoomIn(500, complete_callback);
-					},
-					hide: function(element, complete_callback){
-						element.zoomOut(500, complete_callback);
-					}*/
