@@ -38,6 +38,38 @@ ZapZapGo.LightShow.registerKeyCommands = function(){
 	});
 }
 
+
+// Waits (scans) until elements are fully loaded (completed) or has been given visible dimensions.
+// This can probably be implemented by just using events (load). But had some troubles using it (not that reliable..) so implemented it like this meanwhile.
+// Will have to review this later.... later :)
+ZapZapGo.LightShow.waitUntilDimensioned = function(elements, completed_callback, scan_interval){
+	var completion_check_callback;
+
+	completion_check_callback = function(elements){
+		var pending_elements = [];
+
+		// Scan for uncompleted elements (pending).
+		// If elements are uncompleted, they will be scanned again next round..
+		$(elements).each(function(){
+			if(!this.complete && this.readyState !== 4){
+				if(!($(this).width() > 0 && $(this).height() > 0)){
+					pending_elements.push(this);
+				}
+			}
+		});
+
+		if(pending_elements.length == 0){
+			completed_callback();
+		}else{
+			setTimeout(function(){
+				completion_check_callback(pending_elements);
+			}, scan_interval);
+		}
+	};
+
+	completion_check_callback(elements);
+};
+
 // Lookup of registered instances
 ZapZapGo.LightShow.instances = {};
 
@@ -159,7 +191,7 @@ ZapZapGo.LightShow.prototype.initialize = function(){
 			outer_scope.effect_wait_for_load = true;
 			// Ensure that all elements are loaded and dimensioned..
 			// Once they are.. Call any effect (show/hide) if previously called.
-			outer_scope.waitUntilDimensioned(
+			ZapZapGo.LightShow.waitUntilDimensioned(
 				$("img, iframe, script", this.options.overlay), function(){
 					outer_scope.effect_wait_for_load = false;
 					outer_scope.effect_deferred_callback && outer_scope.effect_deferred_callback();
@@ -173,7 +205,7 @@ ZapZapGo.LightShow.prototype.initialize = function(){
 		this.initializeOverlay();
 
 		this.setEffect(this.options.effect.type,
-			this.options.effect.duration);
+			this.options.effect.duration, true);
 
 		this.readapt(true);
 
@@ -192,7 +224,7 @@ ZapZapGo.LightShow.prototype.initializeOverlay = function(){
 
 		// Set the source in which the overlay should adjust to
 		this.resize_source = outer_scope.isDocumentOverlay() ? $(document) : this.options.overlay;
-		var overlay_offset = outer_scope.isDocumentOverlay() ? {top:0,left:0} : this.options.overlay.position();
+		var overlay_offset = outer_scope.isDocumentOverlay() ? {top:0,left:0} : this.options.overlay.offset();
 
 		element.attr('id', this.options.id + "-overlay").addClass("ls-overlay")
 			.css({
@@ -237,7 +269,7 @@ ZapZapGo.LightShow.prototype.moveToTop = function(){
 	}
 
 	// Set the z-index base for this instance
-	this.z_index_base = this.isElementOverlay() ?
+	this.z_index_base = !this.options.overlay && this.isElementOverlay() ?
 		ZapZapGo.LightShow.getElementZIndex(this.options.overlay) + 1 :
 		light_shadow.current_z_index += 100;
 
@@ -315,37 +347,6 @@ ZapZapGo.LightShow.prototype.release = function(){
 	delete ZapZapGo.LightShow.instances[this.options.id];
 }
 
-// Waits (scans) until elements are fully loaded (completed) or has been given visible dimensions.
-// This can probably be implemented by just using events (load). But had some troubles using it (not that reliable..) so implemented it like this meanwhile.
-// Will have to review this later.... later :)
-ZapZapGo.LightShow.prototype.waitUntilDimensioned = function(elements, completed_callback, scan_interval){
-	var completion_check_callback;
-
-	completion_check_callback = function(elements){
-		var pending_elements = [];
-
-		// Scan for uncompleted elements (pending).
-		// If elements are uncompleted, they will be scanned again next round..
-		$(elements).each(function(){
-			if(!this.complete && this.readyState !== 4){
-				if(!($(this).width() > 0 && $(this).height() > 0)){
-					pending_elements.push(this);
-				}
-			}
-		});
-
-		if(pending_elements.length == 0){
-			completed_callback();
-		}else{
-			setTimeout(function(){
-				completion_check_callback(pending_elements);
-			}, scan_interval);
-		}
-	};
-
-	completion_check_callback(elements);
-};
-
 ZapZapGo.LightShow.prototype.isDocumentOverlay = function(){
 	return this.options.overlay == 'document';
 }
@@ -356,7 +357,7 @@ ZapZapGo.LightShow.prototype.readapt = function(add_resize_events){
 	var resize_callback = function(){
 		if(!outer_scope.effect_wait_for_load){
 			var overlay_offset = outer_scope.isDocumentOverlay() ? {top:0,left:0} :
-				outer_scope.options.overlay.position();
+				outer_scope.options.overlay.offset();
 
 			var element_dimensions = {
 				'top': overlay_offset.top,
@@ -371,7 +372,7 @@ ZapZapGo.LightShow.prototype.readapt = function(add_resize_events){
 	};
 
 	if(add_resize_events){
-		$(window).resize(resize_callback);
+		$(window).resize(resize_callback).ready(resize_callback).load(resize_callback);
 		var all_elements_loaded = true;
 
 		$("img, iframe, script", outer_scope.options.overlay).load(resize_callback).each(function() {
@@ -391,8 +392,9 @@ ZapZapGo.LightShow.prototype.readapt = function(add_resize_events){
 	return this;
 }
 
-ZapZapGo.LightShow.prototype.setEffect = function(type, duration){
+ZapZapGo.LightShow.prototype.setEffect = function(type, duration, ignore_if_set){
 	var show, hide = null;
+	duration = duration || this.options.effect.duration;
 
 	switch(type){
 		case "fade":
@@ -413,10 +415,10 @@ ZapZapGo.LightShow.prototype.setEffect = function(type, duration){
 	}
 
 	if(show && hide){
-		if(!this.options.effect.show){
+		if(!(ignore_if_set && this.options.effect.show)){
 			this.options.effect.show = show;
 		}
-		if(!this.options.effect.hide){
+		if(!(ignore_if_set && this.options.effect.hide)){
 			this.options.effect.hide = hide;
 		}
 	}

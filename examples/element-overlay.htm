@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<title>Element overlay example - LightShow.js</title>
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<script src="scripts/jquery-1.7.2.min.js" type="text/javascript"></script>
+	<script src="../lightshow.jquery.min.js" type="text/javascript"></script>
+
+	<script>
+		$(function() {
+			var overlay_example = $.lightShow({
+				overlay: $("div#element-to-overlay"),
+				content: $("div#element-overlay-content"),
+				showOnStartup: true
+			});
+
+			$(".lightshow-example .actions a").click(function(){
+				switch($(this).attr('rel')){
+					case 'show':
+						overlay_example.show();
+						break;
+					case 'hide':
+						overlay_example.hide();
+						break;
+				}
+				return false;
+			});
+		});
+	</script>
+
+	<style type="text/css">
+		body {
+			color: #101010;
+		}
+
+		div#element-overlay-content {
+			margin-top: 150px;
+			text-align:center;
+		}
+
+		div#element-overlay-content *, div#element-overlay-content a:hover, div#element-overlay-content a:visited {
+			color:#fff;
+		}
+
+		div#element-to-overlay {
+			position:relative;
+			top: 10px;
+			background-color: #101010;
+			margin:0px;
+			padding:0px;
+			width:500px;
+			height:375px;
+		}
+	</style>
+</head>
+<body>
+	<div>
+		<img src="images/logo.png" style="margin:0px;padding:0px;" width="227" height="47" />
+	</div>
+	<div class="lightshow-example">
+		<h1>Element overlay example</h1>
+		<p>
+			This example demonstrates how you can easily overlay a specific element.
+		</p>
+		<strong>Markup</strong>
+		<pre>
+&lt;div id=&quot;element-to-overlay&quot;&gt;
+	&lt;img src=&quot;images/awesome-cat.jpg&quot; width=&quot;500&quot; height=&quot;375&quot; /&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;element-overlay-content&quot;&gt;
+	&lt;h1&gt;Have you seen this cat?&lt;/h1&gt;
+	&lt;a href=&#39;#&#39; class=&#39;hide-button&#39;&gt;SEE IT&lt;/a&gt;
+&lt;/div&gt;</pre>
+		<strong>Code</strong>
+		<pre>
+$.lightShow({
+	overlay: $("div#element-to-overlay"),
+	content: $("div#element-overlay-content"),
+	showOnStartup: true
+});</pre>
+		<strong>Actions</strong>
+		<div class="actions">
+			<a href="#" rel='show'>Show</a> |
+			<a href="#" rel='hide'>Hide</a>
+		</div>
+		<div id="element-overlay-content">
+			<h1>Have you seen this cat?</h1>
+			<a href='#' class='hide-button'>SEE IT</a>
+		</div>
+		<div id="element-to-overlay">
+			<img src="images/awesome-cat.jpg" width="500" height="375" />
+		</div>
+	</div>
+</body>
+</html>
