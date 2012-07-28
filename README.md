@@ -91,10 +91,8 @@ Enabling this option means that pressing the escape key (ESC) automatically clos
 Effects that run when the overlay is showing/hiding.
 
 	effect: {
-		default: {
-			type: 'fade', // Default is 'fade', but can also be, 'slide' and 'toggle'
-			duration: 500 // Time in milliseconds (ms) that the effect should animate
-		}
+		type: 'fade', // Default is 'fade', but can also be, 'slide' and 'toggle'
+		duration: 500 // Time in milliseconds (ms) that the effect should animate
 	}
 	
 But it is also possible to override the default effects and use your own, i.e.
@@ -156,6 +154,14 @@ Sets the content of the overlay. Value is same as the 'content' option, i.e.
 	$.lightShow({/*options...*/}).setContent("<h1>My amazing content that I want in my overlay!</h1>");
 ===========================
 	$.lightShow({/*options...*/}).setContent($("#element-to-use-as-content"));
+
+### setEffect
+
+Sets the effect to be used when showing/hiding the overlay. Effects supported are 'fade', 'slide' and 'toggle'.
+
+	$.lightShow({/*options...*/}).setEffect("slide");
+===========================
+	$.lightShow({/*options...*/}).setEffect("toggle");
 	
 ### readapt
 
@@ -179,31 +185,7 @@ Releases/removes all memory/elements associated with this instance. This can be 
 
 ## Examples
 
-### Full document overlay with static content
-	$.lightShow({
-		content: "<div>I CAN HAZ OVERLAY</div>",
-		showOnStartup: true
-	});
-	
-### Overlay with hide button
-	$.lightShow({
-		content: "<div>I CAN HAZ OVERLAY DAT EZ CLOSABLE</div><a href='#' class='hide-button'>close overlay</a>",
-		showOnStartup: true
-	});
-	
-### Overlay a specific element
-
-	<div id="element-to-overlay">
-		MY AWEZOME ELEMENT. OVERLAYYD.
-	</div>
-
-==============
-
-	$.lightShow({
-		overlay: $("div#element-to-overlay"),
-		content: "<div>I CAN HAZ OVERLAY DAT EZ FOR A SPECEFEK ELEMENT</div>",
-		showOnStartup: true
-	});
+See [/examples](https://github.com/ZapZapGo/lightshow.js/tree/master/examples "examples")
 	
 ## Browser Compatibility
 
