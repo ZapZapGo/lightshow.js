@@ -88,6 +88,7 @@ ZapZapGo.LightShow.default_options = {
 	overlay: "document",
 	content: null,
 	showOnStartup: false,
+	showOnHover: false,
 	hideButtonSelector: ".hide-button",
 	hideOnEscape: true,
 	style: {
