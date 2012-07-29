@@ -209,7 +209,16 @@ ZapZapGo.LightShow.prototype.initialize = function(){
 
 		this.readapt(true);
 
-		if(this.options.showOnStartup){
+		// Activate on hover or startup
+		if(outer_scope.options.overlay && outer_scope.options.showOnHover){
+			outer_scope.options.overlay.mouseenter(function(){
+				outer_scope.show();
+			});
+
+			outer_scope.content_element.mouseleave(function(){
+				outer_scope.hide();
+			});
+		}else if(this.options.showOnStartup){
 			this.show();
 		}
 
@@ -236,7 +245,7 @@ ZapZapGo.LightShow.prototype.initializeOverlay = function(){
 			});
 
 		this.overlay_element = element;
-		$("body").append(element);
+		element.appendTo($("body"));
 	}
 }
 
@@ -372,8 +381,7 @@ ZapZapGo.LightShow.prototype.readapt = function(add_resize_events){
 	};
 
 	if(add_resize_events){
-		$(window).resize(resize_callback).ready(resize_callback).load(resize_callback);
-		var all_elements_loaded = true;
+		$(window).resize(resize_callback).ready(resize_callback).load(resize_callback).scroll(resize_callback);
 
 		$("img, iframe, script", outer_scope.options.overlay).load(resize_callback).each(function() {
 			if(this.complete || (jQuery.browser.msie && parseInt(jQuery.browser.version) == 6)){
