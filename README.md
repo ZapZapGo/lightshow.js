@@ -8,8 +8,9 @@ LightShow is a JavaScript/JQuery plugin that helps you create amazingly simple o
 * Overlay the whole document or a specific element.
 * No external CSS file needed. But still easy to style.
 * Auto adjusts itself on window resize. Possible to manually adjust element (e.g. during animation, see: readapt).
-* Callbacks. Hook in when events occur.
 * Effects. Use standard JQuery effects (toggle, fade, slide) or use your own.
+* Hover activation. Show/hide overlay on element hover.
+* Callbacks. Hook in when events occur.
 * Close overlay using escape key.
 
 ### Planned
