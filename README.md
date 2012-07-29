@@ -69,6 +69,12 @@ Whether or not to run show() directly after initialization.
 Enabling this option is equal to doing the following:
 
 	$.lightShow({/*options...*/}).show();
+	
+### Show on overlay hover
+
+If a specific overlay element is set, then the overlay can be activated (show/hide) on mouse hover.
+
+	showOnHover: true
 
 ### Hide button selector
 
