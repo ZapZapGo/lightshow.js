@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<title>Multiple overlays example - LightShow.js</title>
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<script src="scripts/jquery-1.7.2.min.js" type="text/javascript"></script>
+	<script src="../lightshow.jquery.min.js" type="text/javascript"></script>
+
+	<script>
+		$(function() {
+			var overlay_example_first = $.lightShow({
+				overlay: $("div#element-to-overlay"),
+				content: "<a href='#' class='hide-button'>Click to close (1st)</a>",
+				showOnStartup: true,
+				style: {
+					opacity: 0.6
+				}
+			});
+
+			var overlay_example_second = $.lightShow({
+				overlay: $("div#element-to-overlay"),
+				content: "<a href='#' class='hide-button'>Click to close (2nd)</a>",
+				showOnStartup: true,
+				style: {
+					opacity: 0.6
+				}
+			});
+
+			var overlay_example_third = $.lightShow({
+				content: "<a href='#' class='hide-button'>Click to close (3rd)</a>",
+				showOnStartup: true
+			});
+
+			$(".lightshow-example .actions a").click(function(){
+				switch($(this).attr('rel')){
+					case 'show':
+						overlay_example_first.show();
+						overlay_example_second.show();
+						overlay_example_third.show();
+						break;
+					case 'hide':
+						overlay_example_first.hide();
+						overlay_example_second.hide();
+						overlay_example_third.hide();
+						break;
+				}
+				return false;
+			});
+		});
+	</script>
+
+	<style type="text/css">
+		body {
+			color: #101010;
+		}
+
+		div.ls-content a, div.ls-content a:hover, div.ls-content a:link {
+			color: #fff;
+		}
+
+		div#element-to-overlay {
+			position:relative;
+			top: 10px;
+			background-color: #101010;
+			margin:0px;
+			padding:0px;
+			width:500px;
+			height:375px;
+		}
+	</style>
+</head>
+<body>
+	<div>
+		<img src="images/logo.png" style="margin:0px;padding:0px;" width="227" height="47" />
+	</div>
+	<div class="lightshow-example">
+		<h1>Multiple overlays example</h1>
+		<p>
+			This example demonstrates how you can have multiple overlays overlaying each other on the same page.
+		</p>
+		<strong>Markup</strong>
+		<pre>
+&lt;div id=&quot;element-to-overlay&quot;&gt;
+	&lt;img src=&quot;images/awesome-cat.jpg&quot; width=&quot;500&quot; height=&quot;375&quot; /&gt;
+&lt;/div&gt;</pre>
+		<strong>Code</strong>
+		<pre>$.lightShow({
+	overlay: $(&quot;div#element-to-overlay&quot;),
+	content: &quot;&lt;a href=&#39;#&#39; class=&#39;hide-button&#39;&gt;Click to close (1st)&lt;/a&gt;&quot;,
+	showOnStartup: true,
+	style: {
+		opacity: 0.6
+	}
+});
+
+$.lightShow({
+	overlay: $(&quot;div#element-to-overlay&quot;),
+	content: &quot;&lt;a href=&#39;#&#39; class=&#39;hide-button&#39;&gt;Click to close (2nd)&lt;/a&gt;&quot;,
+	showOnStartup: true,
+	style: {
+		opacity: 0.6
+	}
+});
+
+$.lightShow({
+	content: &quot;&lt;a href=&#39;#&#39; class=&#39;hide-button&#39;&gt;Click to close (3rd)&lt;/a&gt;&quot;,
+	showOnStartup: true
+});</pre>
+		<strong>Actions</strong>
+		<div class="actions">
+			<a href="#" rel='show'>Show</a> |
+			<a href="#" rel='hide'>Hide</a>
+		</div>
+		<div id="element-to-overlay">
+			<img src="images/awesome-cat.jpg" width="500" height="375" />
+		</div>
+	</div>
+</body>
+</html>
