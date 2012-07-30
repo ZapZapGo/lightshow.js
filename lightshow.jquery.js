@@ -264,7 +264,7 @@ ZapZapGo.LightShow.prototype.initialize = function(){
 
 		// Activate on hover or startup
 		if(outer_scope.options.overlay && outer_scope.options.showOnHover){
-			// Using mousemovie + hittest due to issues with event bubbling + hover events.
+			// Using mousemove + hit test due to issues with event bubbling + hover events.
 			// Will have to look into doing this more efficiently. May be a real performance hog when tracking several overlays.
 			$(document).mousemove(function(event){
 				if(ZapZapGo.LightShow.elementHitTest(outer_scope.options.overlay, {x:event.pageX, y:event.pageY})){
