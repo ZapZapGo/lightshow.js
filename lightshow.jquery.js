@@ -38,6 +38,52 @@ ZapZapGo.LightShow.registerKeyCommands = function(){
 	});
 }
 
+// Position an absolute element relative to another (can be either element or window)
+ZapZapGo.LightShow.positionElementRelative = function(source, target_element, x_directive, y_directive){
+	var is_source_window = $.isWindow(source.get(0));
+
+	var x_position = is_source_window ? 0 : source.position().left;
+	var y_position = is_source_window ? 0 : source.position().top;
+
+	switch(x_directive){
+		case 'left':
+			break;
+		case 'center':
+			x_position += (source.outerWidth()/2)-(target_element.outerWidth()/2);
+			break;
+		case 'right':
+			x_position += source.outerWidth()-target_element.outerWidth();
+			break;
+	}
+
+	switch(y_directive){
+		case 'top':
+			break;
+		case 'middle':
+			y_position += (source.outerHeight()/2)-(target_element.outerHeight()/2);
+			break;
+		case 'bottom':
+			y_position += source.outerHeight()-target_element.outerHeight();
+			break;
+	}
+
+	target_element.css({
+		'top': y_position,
+		'left': x_position
+	});
+}
+
+ZapZapGo.LightShow.elementHitTest = function(target_element, test_position){
+	var element_position = target_element.position();
+
+	if(test_position.x >= element_position.left && test_position.x < element_position.left+target_element.width()){
+		if(test_position.y >= element_position.top && test_position.y < element_position.top+target_element.height()){
+			return true;
+		}
+	}
+
+	return false;
+}
 
 // Waits (scans) until elements are fully loaded (completed) or has been given visible dimensions.
 // This can probably be implemented by just using events (load). But had some troubles using it (not that reliable..) so implemented it like this meanwhile.
@@ -96,6 +142,12 @@ ZapZapGo.LightShow.default_options = {
 		overflow: 'hidden',
 		background: null,
 		backgroundColor: "#000",
+	},
+	position: {
+		content: {
+			x_directive: 'center', // Can be either 'left', 'center' or 'right'
+			y_directive: 'middle' // Can be either 'top', 'middle' or 'bottom'
+		}
 	},
 	callback: {
 		initialization: {
@@ -212,12 +264,14 @@ ZapZapGo.LightShow.prototype.initialize = function(){
 
 		// Activate on hover or startup
 		if(outer_scope.options.overlay && outer_scope.options.showOnHover){
-			outer_scope.options.overlay.mouseenter(function(){
-				outer_scope.show();
-			});
-
-			outer_scope.content_element.mouseleave(function(){
-				outer_scope.hide();
+			// Using mousemovie + hittest due to issues with event bubbling + hover events.
+			// Will have to look into doing this more efficiently. May be a real performance hog when tracking several overlays.
+			$(document).mousemove(function(event){
+				if(ZapZapGo.LightShow.elementHitTest(outer_scope.options.overlay, {x:event.pageX, y:event.pageY})){
+					outer_scope.show();
+				}else{
+					outer_scope.hide();
+				}
 			});
 		}else if(this.options.showOnStartup){
 			this.show();
@@ -255,10 +309,9 @@ ZapZapGo.LightShow.prototype.createContainer = function(){
 		.hide()
 		.css({
 			'position':'absolute',
-			'height': 0, 'width': 0,
 			'top':'0px', 'left':'0px',
 			'padding': '0px', 'margin': '0px',
-			'overflow':this.options.style.overflow
+			'overflow': this.options.style.overflow
 		});
 }
 
@@ -369,15 +422,18 @@ ZapZapGo.LightShow.prototype.readapt = function(add_resize_events){
 			var overlay_offset = outer_scope.isDocumentOverlay() ? {top:0,left:0} :
 				outer_scope.options.overlay.offset();
 
-			var element_dimensions = {
+			outer_scope.overlay_element.css({
 				'top': overlay_offset.top,
 				'left': overlay_offset.left,
 				'width': outer_scope.resize_source.outerWidth(),
 				'height': outer_scope.resize_source.outerHeight()
-			};
+			});
 
-			outer_scope.overlay_element.css(element_dimensions);
-			outer_scope.content_element.css(element_dimensions);
+			// Position the content relative to the 
+			ZapZapGo.LightShow.positionElementRelative(
+				outer_scope.isDocumentOverlay() ? $(window) : outer_scope.options.overlay,
+				outer_scope.content_element, outer_scope.options.position.content.x_directive,
+				outer_scope.options.position.content.y_directive);
 		}
 	};
 
