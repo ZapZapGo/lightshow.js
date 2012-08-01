@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<title>Modal overlay example - LightShow.js</title>
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<script src="scripts/jquery-1.7.2.min.js" type="text/javascript"></script>
+	<script src="../lightshow.jquery.min.js" type="text/javascript"></script>
+
+	<script>
+		$(function() {
+			var signup_modal = $.lightShow({
+				content: $("div#document-overlay-content"),
+				showOnStartup: true,
+				effect: {
+					hideContent: function(element, completion){
+						element.animate({'opacity':0, 'top':'-=50'}, 700).hide(function(){
+							$(this).css('opacity', 1);
+							signup_modal.readapt();
+							completion();
+						});
+					}
+				}
+			});
+
+			$("div#document-overlay-content input[type='button']").click(function(){
+				signup_modal.hide();
+				return false;
+			});
+
+			$(".lightshow-example .actions a[rel='show']").click(function(){
+				signup_modal.show();
+				return false;
+			});
+		});
+	</script>
+
+	<style type="text/css">
+		body {
+			color: #101010;
+			font: 13px Helvetica,arial,freesans,clean,sans-serif;
+			line-height: 1.4;
+			color: #333;
+		}
+
+		input {
+			border: 1px solid #a0a0a0;
+			-webkit-border-radius: 3px;
+			-moz-border-radius: 3px;
+			border-radius: 3px;
+			-webkit-box-shadow: inset 0 1px 0 0 #96CA6D;
+			-moz-box-shadow: inset 0 1px 0 0 #96ca6d;
+			box-shadow: inset 0 1px 0 0 #96CA6D;
+			color: #101010;
+			font: normal 11px "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+			line-height: 1;
+			padding: 10px 0px 10px 5px;
+			text-align: left;
+			width: 98%;
+			display: block;
+		}
+
+		input[type='button'] {
+			font-weight: bold;
+			text-align: center;
+			width: 150px;
+		}
+
+		div.overlay-modal {
+			width: 500px;
+			color: #101010;
+			background-color: #fff;
+			margin: 10px;
+			padding: 5px;
+			/*Box shadow*/
+			-webkit-box-shadow: 0 0 10px #101010;
+			-moz-box-shadow: 0 0 10px #101010;
+			-o-box-shadow: 0 0 10px #101010;
+			box-shadow: 0 0 10px #101010;
+			/*Box border radius*/
+			-moz-border-radius: 5px;
+			-webkit-border-radius: 5px;
+			-khtml-border-radius: 5px;
+			border-radius: 5px;
+		}
+
+		div.overlay-modal div.header {
+			clear: both;
+			background-color: #f0f0f0;
+			padding: 5px;
+			vertical-align: middle;
+			margin: 0px;
+		}
+
+		div.overlay-modal div.header:after {
+			content: ".";
+			display: block;
+			clear: both;
+			visibility: hidden;
+			line-height: 0;
+			height: 0;
+		}
+
+		div.overlay-modal div.header h1 {
+			float: left;
+			font-size: 16px;
+			color: #666;
+			text-shadow: 0 1px 0 #ECE8E5;
+			padding: 0px;
+			margin: 0px;
+		}
+
+		div.overlay-modal div.header a.hide-button {
+			float: right;
+			background: transparent url('http://qfcdn.com/templates/mat24.se/images/lightbox_icon_close.png') top left;
+			height: 16px;
+			width: 16px;
+			overflow: hidden;
+			line-height: 50px;
+			margin-top: 3px;
+			margin-right: 3px;
+		}
+
+		div.overlay-modal div.header a.hide-button:hover {
+			background-position: bottom left;
+		}
+
+		div.overlay-modal div.content {
+			padding: 10px;
+		}
+
+		div.overlay-modal div.content ul.inputs {
+			margin: 0px;
+			padding: 0px;
+		}
+
+		div.overlay-modal div.content ul.inputs li {
+			list-style: none;
+		}
+
+		div.overlay-modal div.content ul.inputs li:first-child {
+			margin-top: -10px;
+		}
+
+		div.overlay-modal div.content ul.inputs li:last-child {
+			margin-bottom: 20px;
+		}
+	</style>
+</head>
+<body>
+	<div>
+		<img src="images/logo.png" style="margin:0px;padding:0px;" width="227" height="47" />
+	</div>
+	<div class="lightshow-example">
+		<h1>Modal overlay example</h1>
+		<p>
+			This example demonstrates the flexibility of LightShow and how it can be used to create modals.
+		</p>
+		<strong>Markup</strong>
+		<pre>&lt;div id=&quot;document-overlay-content&quot; class=&quot;overlay-modal&quot;&gt;
+	&lt;div class=&quot;header&quot;&gt;
+		&lt;h1&gt;Sign up and be awesome!&lt;/h1&gt;
+		&lt;a href=&#39;#&#39; class=&#39;hide-button&#39; title=&#39;Close sign up&#39;&gt;X&lt;/a&gt;
+	&lt;/div&gt;
+	&lt;div class=&quot;content&quot;&gt;
+		&lt;ul class=&quot;inputs&quot;&gt;
+			&lt;li&gt;
+				&lt;label&gt;
+					&lt;h3&gt;Username&lt;/h3&gt;
+					&lt;input type=&quot;text&quot; name=&quot;username&quot; placeholder=&quot;e.g. mrmiagi023&quot; /&gt;
+				&lt;/label&gt;
+			&lt;/li&gt;
+			&lt;li&gt;
+				&lt;label&gt;
+					&lt;h3&gt;Email Address&lt;/h3&gt;
+					&lt;input type=&quot;text&quot; name=&quot;email_address&quot; placeholder=&quot;e.g. jeff@peffpoa.com&quot; /&gt;
+				&lt;/label&gt;
+			&lt;/li&gt;
+			&lt;li&gt;
+				&lt;label&gt;
+					&lt;h3&gt;Password&lt;/h3&gt;
+					&lt;input type=&quot;password&quot; name=&quot;password&quot; /&gt;
+				&lt;/label&gt;
+			&lt;/li&gt;
+		&lt;/ul&gt;
+		&lt;input type=&quot;button&quot; value=&quot;Sign up&quot; /&gt;
+	&lt;/div&gt;
+&lt;/div&gt;</pre>
+		<strong>Code</strong>
+		<pre>
+var signup_modal = $.lightShow({
+	content: $(&quot;div#document-overlay-content&quot;),
+	showOnStartup: true,
+	effect: {
+		hideContent: function(element, completion){
+			element.animate({&#39;opacity&#39;:0, &#39;top&#39;:&#39;-=50&#39;}, 700).hide(function(){
+				$(this).css(&#39;opacity&#39;, 1);
+				signup_modal.readapt();
+				completion();
+			});
+		}
+	}
+});
+
+$(&quot;div#document-overlay-content input[type=&#39;button&#39;]&quot;).click(function(){
+	signup_modal.hide();
+	return false;
+});</pre>
+		<div id="document-overlay-content" class="overlay-modal">
+			<div class="header">
+				<h1>Sign up and be awesome!</h1>
+				<a href='#' class='hide-button' title='Close sign up'>X</a>
+			</div>
+			<div class="content">
+				<ul class="inputs">
+					<li>
+						<label>
+							<h3>Username</h3>
+							<input type="text" name="username" placeholder="e.g. mrmiagi023" />
+						</label>
+					</li>
+					<li>
+						<label>
+							<h3>Email Address</h3>
+							<input type="text" name="email_address" placeholder="e.g. jeff@peffpoa.com" />
+						</label>
+					</li>
+					<li>
+						<label>
+							<h3>Password</h3>
+							<input type="password" name="password" />
+						</label>
+					</li>
+				</ul>
+				<input type="button" value="Sign up" />
+			</div>
+		</div>
+		<strong>Actions</strong>
+		<div class="actions">
+			<a href="#" rel='show'>Show</a>
+		</div>
+	</div>
+</body>
+</html>

@@ -38,12 +38,12 @@ ZapZapGo.LightShow.registerKeyCommands = function(){
 	});
 }
 
-// Position an absolute element relative to another (can be either element or window)
-ZapZapGo.LightShow.positionElementRelative = function(source, target_element, x_directive, y_directive){
+// Gets the element position relative to another (can be either element or window)
+ZapZapGo.LightShow.getRelativeElementPosition = function(source, target_element, x_directive, y_directive, wait_duration, animation_duration, finished_callback){
 	var is_source_window = $.isWindow(source.get(0));
 
-	var x_position = is_source_window ? 0 : source.position().left;
-	var y_position = is_source_window ? 0 : source.position().top;
+	var x_position = is_source_window ? source.scrollLeft() : source.position().left;
+	var y_position = is_source_window ? source.scrollTop() : source.position().top;
 
 	switch(x_directive){
 		case 'left':
@@ -67,10 +67,10 @@ ZapZapGo.LightShow.positionElementRelative = function(source, target_element, x_
 			break;
 	}
 
-	target_element.css({
+	return {
 		'top': y_position,
 		'left': x_position
-	});
+	};
 }
 
 ZapZapGo.LightShow.elementHitTest = function(target_element, test_position){
@@ -229,6 +229,9 @@ ZapZapGo.LightShow.prototype.effect_wait_for_load = false;
 // Callback to effect that was executed before elements was loaded.
 ZapZapGo.LightShow.prototype.effect_deferred_callback = null;
 
+// Timer used when doing repositions
+ZapZapGo.LightShow.prototype.reposition_timer_id = 0;
+
 ZapZapGo.LightShow.prototype.initialize = function(){
 	var outer_scope = this;
 
@@ -241,11 +244,11 @@ ZapZapGo.LightShow.prototype.initialize = function(){
 		}
 
 		if(this.options.overlay){
-			outer_scope.effect_wait_for_load = true;
+			this.effect_wait_for_load = true;
 			// Ensure that all elements are loaded and dimensioned..
 			// Once they are.. Call any effect (show/hide) if previously called.
 			ZapZapGo.LightShow.waitUntilDimensioned(
-				$("img, iframe, script", this.options.overlay), function(){
+				$("img, iframe", this.options.overlay), function(){
 					outer_scope.effect_wait_for_load = false;
 					outer_scope.effect_deferred_callback && outer_scope.effect_deferred_callback();
 					outer_scope.effect_deferred_callback = null;
@@ -263,7 +266,7 @@ ZapZapGo.LightShow.prototype.initialize = function(){
 		this.readapt(true);
 
 		// Activate on hover or startup
-		if(outer_scope.options.overlay && outer_scope.options.showOnHover){
+		if(this.options.overlay && this.options.showOnHover){
 			// Using mousemove + hit test due to issues with event bubbling + hover events.
 			// Will have to look into doing this more efficiently. May be a real performance hog when tracking several overlays.
 			$(document).mousemove(function(event){
@@ -298,6 +301,13 @@ ZapZapGo.LightShow.prototype.initializeOverlay = function(){
 				'background-color': this.options.style.backgroundColor,
 				'opacity': this.options.style.opacity
 			});
+
+		if(outer_scope.isDocumentOverlay()){
+			element.click(function(){
+				outer_scope.hide();
+				return false;
+			});
+		}
 
 		this.overlay_element = element;
 		element.appendTo($("body"));
@@ -362,8 +372,8 @@ ZapZapGo.LightShow.prototype.show = function(finished_callback){
 			this.moveToTop();
 		}
 
-		outer_scope.options.effect.show(outer_scope.overlay_element, function(){});
-		outer_scope.options.effect.show(outer_scope.content_element, function(){
+		(this.options.effect.showOverlay || this.options.effect.show)(outer_scope.overlay_element, function(){});
+		(this.options.effect.showContent || this.options.effect.show)(outer_scope.content_element, function(){
 			finished_callback && finished_callback();
 			outer_scope.options.callback.show.after(outer_scope);
 		});
@@ -388,8 +398,8 @@ ZapZapGo.LightShow.prototype.hide = function(finished_callback){
 		this.is_visible = false;
 		this.options.callback.hide.before(this);
 
-		this.options.effect.hide(this.overlay_element, function(){});
-		outer_scope.options.effect.hide(outer_scope.content_element, function(){
+		(this.options.effect.hideOverlay || this.options.effect.hide)(this.overlay_element, function(){});
+		(this.options.effect.hideContent || this.options.effect.hide)(outer_scope.content_element, function(){
 			finished_callback && finished_callback();
 			outer_scope.options.callback.hide.after(outer_scope);
 		});
@@ -429,11 +439,21 @@ ZapZapGo.LightShow.prototype.readapt = function(add_resize_events){
 				'height': outer_scope.resize_source.outerHeight()
 			});
 
-			// Position the content relative to the 
-			ZapZapGo.LightShow.positionElementRelative(
+			var relative_position = ZapZapGo.LightShow.getRelativeElementPosition(
 				outer_scope.isDocumentOverlay() ? $(window) : outer_scope.options.overlay,
 				outer_scope.content_element, outer_scope.options.position.content.x_directive,
 				outer_scope.options.position.content.y_directive);
+
+			if(outer_scope.reposition_timer_id){
+				clearTimeout(outer_scope.reposition_timer_id);
+				outer_scope.reposition_timer_id = setTimeout(function(){
+					outer_scope.content_element.animate(relative_position, 400);
+					reposition_timer_id = 0;
+				}, 50);
+			}else{
+				outer_scope.reposition_timer_id = 1;
+				outer_scope.content_element.css(relative_position);
+			}
 		}
 	};
 
